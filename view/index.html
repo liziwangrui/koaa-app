@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body onload="draw()">
+    <canvas id='test' width='150' height='150'></canvas>
+  </body>
+</html>
+<script>
+  function draw() {
+    var canvas = document.getElementById('test')
+    if (canvas.getContext) {
+      var ctx = canvas.getContext('2d')
+      // ctx.fillStyle = 'rgba(200, 0, 0)'
+      // ctx.fillRect(10, 10, 50, 50)
+      
+      // ctx.fillStyle = 'rgba(0, 0, 200, 0.5)'
+      // ctx.fillRect(30, 30, 50, 50)
+      
+      // ctx.fillStyle = 'rgba(200, 0 ,0)'
+      // ctx.strokeRect(40, 40, 50, 50)
+
+      // ctx.beginPath()
+      // ctx.moveTo(75, 75)
+      // ctx.lineTo(100, 75)
+      // ctx.lineTo(100, 25)
+      // ctx.fill()
+      ctx.beginPath();
+      ctx.arc(75,75,50,0,Math.PI*2,true); // 逆时针绘制
+      ctx.moveTo(110,75);
+      ctx.arc(75,75,35,0,Math.PI,false);   // 口(顺时针)
+      ctx.moveTo(65,65);
+      ctx.arc(60,65,5,0,Math.PI*2,true);  // 左眼
+      ctx.moveTo(95,65);
+      ctx.arc(90,65,5,0,Math.PI*2,true);  // 右眼
+      ctx.stroke();
+  }
+  }
+</script>
