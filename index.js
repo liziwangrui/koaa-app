@@ -33,11 +33,28 @@ router.get('/index', async (ctx, next) => {
   ctx.response.body = `<h1>this is Index</h1>`
 })
 
-router.param('user', (id, ctx, next) => {
-  ctx.user = users[id]
-  if (!ctx.user) return ctx.status = 404
-  return next()
-  })
+app.use(async(ctx, next) => {
+  // 直接从上下文中获 get 请求参数ctx.query
+  const url = ctx.url
+  // 返回格式化好的一个对象
+  const ctx_query = ctx.query
+  // 返回字符串
+  const ctx_queryStr = ctx.querystring
+
+  // 从上下文的 request 对象中获取请求的参数
+  const req_query = ctx.request.query
+  const req_queryStr = ctx.request.querystring
+  ctx.body = {
+    url,
+    ctx_query,
+    ctx_queryStr,
+    req_query,
+    req_queryStr
+  }
+  console.log(ctx.body, 'ctx.body')
+  await next()
+})
+
 
 // response
 app.use(router.routes()).use(router.allowedMethods());
