@@ -1,5 +1,6 @@
 const koa = require('koa')
-// const router = require('koa-router')()
+const Router = require('koa-router')
+const router = new Router()
 const fs = require('fs')
 const app = new koa()
 
@@ -19,54 +20,27 @@ app.use(async(ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
-/**
- * 用Promise封装异步读取文件方法
- * @param {string} page  page html文件名
- * @return {promise}
- */
-function render(page) {
-  return new Promise((resolve, reject) => {
-    let viewUrl = `./view/${page}`
-    // 读取文件
-    fs.readFile(viewUrl, 'binary', (error , data) => {
-      if (error) {
-        reject(error)
-      } else {
-        resolve(data)
-      }
-    })
-  })
-}
-
-/**
- * 根据 url 返回相应的 html
- * @param {string} url 
- * @return string
- */
-async function router (url) {
-  let view = '404.html'
-  switch(url) {
-    case '/':
-      view = 'index.html'
-      break;
-    case '/index':
-      view = 'index.html'
-      break;
-    case '/404':
-      view = '404.html'
-      break;
-    default:
-      break;
-  }
-  let html = await render(view)
-  return html
-}
-
-// response
-app.use(async ctx => {
-  let url = ctx.request.url
-  let html = await router(url)
-  ctx.body = html
+// add router url
+router.get('/', async(ctx, next) => {
+  ctx.body = `<h1>this is a test</h1>`
+})
+router.get('/hello/:name', async (ctx, next) => {
+  const name = ctx.params.name
+  ctx.response.body = `<h1>hello, ${name}!</h1>`
 })
 
+router.get('/index', async (ctx, next) => {
+  ctx.response.body = `<h1>this is Index</h1>`
+})
+
+router.param('user', (id, ctx, next) => {
+  ctx.user = users[id]
+  if (!ctx.user) return ctx.status = 404
+  return next()
+  })
+
+// response
+app.use(router.routes()).use(router.allowedMethods());
+
 app.listen(5000)
+
