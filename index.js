@@ -1,8 +1,12 @@
 const koa = require('koa')
 const Router = require('koa-router')
+const app = new koa()
 const router = new Router()
 const fs = require('fs')
-const app = new koa()
+const bodyParser = require('koa-bodyparser')
+
+// middleware是有顺序的，所以要在 router 使用之前注册到 app 上
+app.use(bodyParser())
 
 // x-response-time
 app.use(async(ctx, next) => {
@@ -20,10 +24,11 @@ app.use(async(ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
-// add router url
+// add router url 造一个简单的登陆表单
 router.get('/', async(ctx, next) => {
-  ctx.body = `<h1>this is a test</h1>`
+  ctx.response.body = `<h1>this is a test123</h1>`
 })
+
 router.get('/hello/:name', async (ctx, next) => {
   const name = ctx.params.name
   ctx.response.body = `<h1>hello, ${name}!</h1>`
